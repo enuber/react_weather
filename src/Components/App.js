@@ -1,14 +1,13 @@
 import React from 'react';
+import { Router, Route, Switch } from 'react-router-dom';
+import history from '../history';
 import Geocode from 'react-geocode';
 import openweatherOnecall from '../apis/openweatherOneCall';
-import openweatherCurrent from '../apis/openweatherCurrent';
-import openWeatherFiveDay from '../apis/openweatherFiveDay';
+import ShowWeather from './weather/ShowWeather';
+import ShowHourly from './weather/ShowHourly';
+import Header from './Header';
 import ZipcodeInput from './Zipcode_Input';
-
-const KEY = "feacc5a81b3977108efdfca4e81d0b3e";
-const KEY_GOOGLE = "AIzaSyCFKscIFBnXk_7E-oqhps7IysgOXjn7NCk";
-
-
+import Keys from '../config.json';
 
 class App extends React.Component {
 
@@ -20,7 +19,7 @@ class App extends React.Component {
 
     //uses a call to google api to get lat and long from zipcode. Need these to properly make the call to weather api
     getLocation = async zipcode => {
-        Geocode.setApiKey(KEY_GOOGLE);
+        Geocode.setApiKey(Keys.keys[0].google);
         await Geocode.fromAddress(zipcode).then(
             response => {
                 const {lat, lng} = response.results[0].geometry.location;
@@ -38,9 +37,10 @@ class App extends React.Component {
                 lon: this.state.lng,
                 exclude: "minutely",
                 units: "imperial",
-                appid: KEY
+                appid: Keys.keys[0].openweather
             }
         });
+        debugger;
         this.setState({currentWeather: response.data});
     };
 
@@ -52,7 +52,14 @@ class App extends React.Component {
     render() {
         return (
             <div className="ui container" style={{marginTop: '10px'}}>
-                <ZipcodeInput onSubmit={this.onSearchSubmit}/>
+                <Router history={history}>
+                    <Header/>
+                    <ZipcodeInput onSubmit={this.onSearchSubmit}/>
+                    <Switch>
+                        <Route path="/" exact render={()=> <ShowWeather allWeather={this.state.currentWeather} />} />
+                        <Route path="/weather/:day" component={ShowHourly} />
+                    </Switch>
+                </Router>
             </div>
         );
     }
