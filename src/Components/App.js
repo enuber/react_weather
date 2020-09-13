@@ -16,43 +16,53 @@ class App extends React.Component {
         lat: null,
         lng: null,
         city: null,
-        state: null
+        state: null,
+        error: false
     };
 
     //uses a call to google api to get lat and long from zipcode. Need these to properly make the call to weather api
     getLocation = async zipcode => {
-        Geocode.setApiKey(Keys.keys[0].google);
-        await Geocode.fromAddress(zipcode).then(
-            response => {
-                const {lat, lng} = response.results[0].geometry.location;
-                const city = response.results[0].address_components[1].long_name;
-                const state = response.results[0].address_components[3].short_name;
-                this.setState({
-                    lat: lat,
-                    lng: lng,
-                    city: city,
-                    state: state
-                });
-            }
-        )
+        if (!this.state.error) {
+            Geocode.setApiKey(Keys.keys[0].google);
+            await Geocode.fromAddress(zipcode).then(
+                response => {
+                    const {lat, lng} = response.results[0].geometry.location;
+                    const city = response.results[0].address_components[1].long_name;
+                    const state = response.results[0].address_components[3].short_name;
+                    this.setState({
+                        lat: lat,
+                        lng: lng,
+                        city: city,
+                        state: state,
+                        error: false
+                    });
+                },
+                error => {
+                    this.setState({error: true});
+                }
+            )
+        }
     };
 
     //this happens after the getLocation finishes making it's call so we can use the lat and lng to get weather data
     getWeather = async () => {
-        const response = await openweatherOnecall.get('', {
-            params: {
-                lat: this.state.lat,
-                lon: this.state.lng,
-                exclude: "minutely",
-                units: "imperial",
-                appid: Keys.keys[0].openweather
-            }
-        });
-        this.setState({currentWeather: response.data});
+        if (!this.state.error) {
+            const response = await openweatherOnecall.get('', {
+                params: {
+                    lat: this.state.lat,
+                    lon: this.state.lng,
+                    exclude: "minutely",
+                    units: "imperial",
+                    appid: Keys.keys[0].openweather
+                }
+            });
+            this.setState({currentWeather: response.data});
+        }
     };
 
-    onSearchSubmit = async zipcode => {
+    onSearchSubmit = async (zipcode, error) => {
         history.push('/');
+        await this.setState({error: error});
         await this.getLocation(zipcode);
         await this.getWeather(zipcode);
     };
@@ -69,6 +79,7 @@ class App extends React.Component {
                                 allWeather={this.state.currentWeather}
                                 city={this.state.city}
                                 state={this.state.state}
+                                error={this.state.error}
                             />}
                         />
                         <Route path="/weather/:day" component={ShowHourly} />

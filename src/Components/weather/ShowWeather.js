@@ -58,8 +58,14 @@ class showWeather extends React.Component {
 
     render() {
         console.log(this.props);
-        debugger;
-        if (!this.props.allWeather.current) {
+        if (this.props.error) {
+            return (
+                <div>
+                    <h2>Forecast</h2>
+                    <div>There is a problem with the ZIP code entered, please try again</div>
+                </div>
+            )
+        } else if (!this.props.allWeather.current) {
             return (
                 <div>
                     <h2>Forecast</h2>

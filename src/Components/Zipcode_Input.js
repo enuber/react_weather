@@ -11,8 +11,10 @@ class Zipcode_Input extends React.Component {
         e.preventDefault();
         const currentZip = this.state.zipcode;
         if ((currentZip.length === 5) && (this.isInt(currentZip))) {
-            this.props.onSubmit(currentZip);
+            this.props.onSubmit(currentZip, false);
             this.setState({zipcode: ''})
+        } else {
+            this.props.onSubmit(currentZip, true);
         }
     };
 
