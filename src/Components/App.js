@@ -14,7 +14,9 @@ class App extends React.Component {
     state = {
         currentWeather: {},
         lat: null,
-        lng: null
+        lng: null,
+        city: null,
+        state: null
     };
 
     //uses a call to google api to get lat and long from zipcode. Need these to properly make the call to weather api
@@ -23,8 +25,14 @@ class App extends React.Component {
         await Geocode.fromAddress(zipcode).then(
             response => {
                 const {lat, lng} = response.results[0].geometry.location;
-                this.setState({lat: lat, lng: lng});
-                console.log(this.state.lat, this.state.lng)
+                const city = response.results[0].address_components[1].long_name;
+                const state = response.results[0].address_components[3].short_name;
+                this.setState({
+                    lat: lat,
+                    lng: lng,
+                    city: city,
+                    state: state
+                });
             }
         )
     };
@@ -40,11 +48,11 @@ class App extends React.Component {
                 appid: Keys.keys[0].openweather
             }
         });
-        debugger;
         this.setState({currentWeather: response.data});
     };
 
     onSearchSubmit = async zipcode => {
+        history.push('/');
         await this.getLocation(zipcode);
         await this.getWeather(zipcode);
     };
@@ -56,7 +64,13 @@ class App extends React.Component {
                     <Header/>
                     <ZipcodeInput onSubmit={this.onSearchSubmit}/>
                     <Switch>
-                        <Route path="/" exact render={()=> <ShowWeather allWeather={this.state.currentWeather} />} />
+                        <Route path="/" exact render={() =>
+                            <ShowWeather
+                                allWeather={this.state.currentWeather}
+                                city={this.state.city}
+                                state={this.state.state}
+                            />}
+                        />
                         <Route path="/weather/:day" component={ShowHourly} />
                     </Switch>
                 </Router>

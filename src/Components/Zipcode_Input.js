@@ -12,6 +12,7 @@ class Zipcode_Input extends React.Component {
         const currentZip = this.state.zipcode;
         if ((currentZip.length === 5) && (this.isInt(currentZip))) {
             this.props.onSubmit(currentZip);
+            this.setState({zipcode: ''})
         }
     };
 
@@ -26,7 +27,7 @@ class Zipcode_Input extends React.Component {
             <div className="ui segement">
                 <form className="ui form" onSubmit={this.onFormSubmit}>
                     <div className="field">
-                        <label>Enter Zipcode</label>
+                        <label>Enter ZIP Code</label>
                         <input
                             type="text"
                             pattern="[0-9]*"
