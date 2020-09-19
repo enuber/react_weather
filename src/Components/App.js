@@ -4,7 +4,7 @@ import history from '../history';
 import Geocode from 'react-geocode';
 import openweatherOnecall from '../apis/openweatherOneCall';
 import ShowWeather from './weather/ShowWeather';
-import ShowHourly from './weather/ShowHourly';
+import ShowDaily from './weather/ShowDaily';
 import Header from './Header';
 import ZipcodeInput from './Zipcode_Input';
 import Keys from '../config.json';
@@ -17,6 +17,7 @@ class App extends React.Component {
         lng: null,
         city: null,
         state: null,
+        zip: null,
         error: false
     };
 
@@ -34,6 +35,7 @@ class App extends React.Component {
                         lng: lng,
                         city: city,
                         state: state,
+                        zip: zipcode,
                         error: false
                     });
                 },
@@ -61,7 +63,7 @@ class App extends React.Component {
     };
 
     onSearchSubmit = async (zipcode, error) => {
-        history.push('/');
+        history.push('/weather');
         await this.setState({error: error});
         await this.getLocation(zipcode);
         await this.getWeather(zipcode);
@@ -74,15 +76,16 @@ class App extends React.Component {
                     <Header/>
                     <ZipcodeInput onSubmit={this.onSearchSubmit}/>
                     <Switch>
-                        <Route path="/" exact render={() =>
+                        <Route path="/weather/" exact render={() =>
                             <ShowWeather
                                 allWeather={this.state.currentWeather}
                                 city={this.state.city}
                                 state={this.state.state}
+                                zip={this.state.zip}
                                 error={this.state.error}
                             />}
                         />
-                        <Route path="/weather/:day" component={ShowHourly} />
+                        <Route path="/weather/:day" component={ShowDaily} />
                     </Switch>
                 </Router>
             </div>
