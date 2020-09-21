@@ -1,10 +1,12 @@
 import './ShowDay.css';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import history from '../../history';
 
 
 class showDay extends React.Component {
 
+    //makes sure that if there is no data, it pushes to home so that there are no errors thrown.
     componentDidMount() {
         if(!this.props.dayWeather.dt) {
             history.push('/');
@@ -28,6 +30,11 @@ class showDay extends React.Component {
         }
     }
 
+    degToCompass(num) {
+        const val = Math.floor((num / 22.5) + 0.5);
+        const arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+        return arr[(val % 16)];
+    }
 
     renderChosenDay() {
         console.log(this.props);
@@ -37,6 +44,9 @@ class showDay extends React.Component {
             const day = this.convertUTC(`${dayWeather.dt}`, 'weekday', 'long');
             const sunrise = this.convertUTC(`${dayWeather.sunrise}`, 'time', 'short');
             const sunset = this.convertUTC(`${dayWeather.sunset}`, 'time', 'short');
+            const windDirection = this.degToCompass(dayWeather.wind_deg);
+            const windInformation = `${windDirection} ${Math.round(dayWeather.wind_speed)}mph`;
+            console.log(windInformation);
             return (
                 <section className="currentDate" key={dayWeather.dt}>
                     <div className="column50">
@@ -45,11 +55,23 @@ class showDay extends React.Component {
                         <div className="weatherDescription">{dayWeather.weather[0].description}</div>
                         <div><img className="weatherIcon" src={`${icon}`} alt="weather icon"/> <span
                             className="temperature">{`${Math.round(dayWeather.temp.day)}`}</span><span
-                            className="degree">&deg;</span><span className="farenheit">{`F`}</span></div>
+                            className="degree">&deg;</span><span className="farenheit">{`F`}</span>
+                        </div>
+                        <div>
+                            <span className="temperatureMax">{`Max Temperature: ${Math.round(dayWeather.temp.max)}`}</span><span
+                            className="degreeSmall">&deg;</span><span className="farenheitSmall">{`F   `}</span>
+                        </div>
+                        <div>
+                            <span className="temperatureMin">{`Min Temperature: ${Math.round(dayWeather.temp.min)}`}</span><span
+                            className="degreeSmall">&deg;</span><span className="farenheitSmall">{`F`}</span>
+                        </div>
                     </div>
                     <div className="column50">
-                        <div className="sunTime">{`Sunrise: ${sunrise}`}</div>
-                        <div className="sunTime">{`Sunset: ${sunset}`}</div>
+                        <div>{`Clouds: ${Math.round(dayWeather.clouds)}%`}</div>
+                        <div>{`Wind: ${windInformation}`}</div>
+                        <div>{`Humidity: ${dayWeather.humidity}%`}</div>
+                        <div>{`Sunrise: ${sunrise}`}</div>
+                        <div>{`Sunset: ${sunset}`}</div>
                     </div>
                 </section>
             )
@@ -58,8 +80,12 @@ class showDay extends React.Component {
 
     render() {
         return(
-            <div className="dayContainer">
-                {this.renderChosenDay()}
+            <div className="section">
+                <h2>Forecast</h2>
+                <div className="dayContainer">
+                    {this.renderChosenDay()}
+                </div>
+                <Link to={`/`} className="button">Back To Current Weather</Link>
             </div>
         )
     }
