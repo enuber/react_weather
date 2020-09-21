@@ -4,7 +4,7 @@ import history from '../history';
 import Geocode from 'react-geocode';
 import openweatherOnecall from '../apis/openweatherOneCall';
 import ShowWeather from './weather/ShowWeather';
-import ShowDaily from './weather/ShowDaily';
+import ShowDay from './weather/ShowDay';
 import Header from './Header';
 import ZipcodeInput from './Zipcode_Input';
 import Keys from '../config.json';
@@ -13,6 +13,7 @@ class App extends React.Component {
 
     state = {
         currentWeather: {},
+        dayClickedWeather: {},
         lat: null,
         lng: null,
         city: null,
@@ -69,6 +70,11 @@ class App extends React.Component {
         await this.getWeather(zipcode);
     };
 
+    onDayClick = (dayClicked, day) => {
+        this.setState({dayClickedWeather: dayClicked});
+        history.push(`/weather/${day}`);
+    };
+
     render() {
         return (
             <div className="ui container" style={{marginTop: '10px'}}>
@@ -83,9 +89,19 @@ class App extends React.Component {
                                 state={this.state.state}
                                 zip={this.state.zip}
                                 error={this.state.error}
+                                clickedADay={this.onDayClick}
                             />}
                         />
-                        <Route path="/weather/:day" component={ShowDaily} />
+                        <Route path="/weather/:day" render={() =>
+                            <ShowDay
+                                dayWeather={this.state.dayClickedWeather}
+                                city={this.state.city}
+                                state={this.state.state}
+                                zip={this.state.zip}
+                                error={this.state.error}
+                                clickedADay={this.onDayClick}
+                            />}
+                        />
                     </Switch>
                 </Router>
             </div>
