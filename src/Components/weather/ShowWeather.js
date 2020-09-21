@@ -1,6 +1,7 @@
 import './ShowWeather.css';
 import React from 'react';
 import ShowHourly from './ShowHourly';
+import ShowDailyList from './ShowDailyList';
 
 class showWeather extends React.Component {
 
@@ -20,7 +21,6 @@ class showWeather extends React.Component {
             default:
                 return dateObj.toLocaleString("en-US", {weekday: typeArg})
         }
-
     }
 
     renderCurrent() {
@@ -70,6 +70,11 @@ class showWeather extends React.Component {
                     <ShowHourly
                         hourlyWeather={this.props.allWeather.hourly}
                         convertUTC={this.convertUTC}
+                    />
+                    <ShowDailyList
+                        dailyWeather={this.props.allWeather.daily}
+                        convertUTC={this.convertUTC}
+                        clickedADay={this.props.clickedADay}
                     />
                 </div>
             </div>
