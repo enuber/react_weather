@@ -1,5 +1,6 @@
 import './ShowDailyList.css';
 import React from 'react'
+import { convertUTC } from '../helper_functions/helpers';
 
 class showDaily extends React.Component {
 
@@ -15,7 +16,7 @@ class showDaily extends React.Component {
     renderDailyList() {
         const {dailyWeather} = this.props;
         return dailyWeather.map( currentDay => {
-            const day = this.props.convertUTC(`${currentDay.dt}`, 'weekday', 'short');
+            const day = convertUTC(`${currentDay.dt}`, 'weekday', 'short');
             const icon = "http://openweathermap.org/img/w/"+ currentDay.weather[0].icon +".png";
             const maxTemp = Math.round(currentDay.temp.max);
             const minTemp = Math.round(currentDay.temp.min);

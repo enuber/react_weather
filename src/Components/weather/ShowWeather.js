@@ -2,34 +2,17 @@ import './ShowWeather.css';
 import React from 'react';
 import ShowHourly from './ShowHourly';
 import ShowDailyList from './ShowDailyList';
+import { convertUTC } from '../helper_functions/helpers';
 
 class showWeather extends React.Component {
-
-    //note descArg is type of info needed like weekday, month, year, hour, minute, second or timeZoneName
-    //typeArg describes what type of info is needed long, short, numeric
-    convertUTC(num, descArg, typeArg) {
-        const milliseconds = num * 1000;
-        const dateObj = new Date(milliseconds);
-
-        switch(descArg) {
-            case 'weekday':
-                return dateObj.toLocaleString("en-US", {weekday: typeArg});
-            case 'hour':
-                return dateObj.toLocaleString("en-US", {hour: typeArg});
-            case 'time':
-                return dateObj.toLocaleTimeString("en-US", {timeStyle: typeArg});
-            default:
-                return dateObj.toLocaleString("en-US", {weekday: typeArg})
-        }
-    }
 
     renderCurrent() {
         const {city, state, zip} = this.props;
         const {current} = this.props.allWeather;
         const icon = "http://openweathermap.org/img/w/"+ current.weather[0].icon +".png";
-        const day = this.convertUTC(`${current.dt}`, 'weekday', 'long');
-        const sunrise = this.convertUTC(`${current.sunrise}`, 'time', 'short');
-        const sunset = this.convertUTC(`${current.sunset}`, 'time', 'short');
+        const day = convertUTC(`${current.dt}`, 'weekday', 'long');
+        const sunrise = convertUTC(`${current.sunrise}`, 'time', 'short');
+        const sunset = convertUTC(`${current.sunset}`, 'time', 'short');
         return (
             <section className="currentDate" key={current.dt}>
                 <div className="column50">
@@ -69,11 +52,9 @@ class showWeather extends React.Component {
                     {this.renderCurrent()}
                     <ShowHourly
                         hourlyWeather={this.props.allWeather.hourly}
-                        convertUTC={this.convertUTC}
                     />
                     <ShowDailyList
                         dailyWeather={this.props.allWeather.daily}
-                        convertUTC={this.convertUTC}
                         clickedADay={this.props.clickedADay}
                     />
                 </div>

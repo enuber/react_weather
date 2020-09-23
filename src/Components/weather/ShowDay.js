@@ -2,7 +2,7 @@ import './ShowDay.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import history from '../../history';
-
+import { convertUTC } from '../helper_functions/helpers';
 
 class showDay extends React.Component {
 
@@ -12,24 +12,8 @@ class showDay extends React.Component {
             history.push('/');
         }
     }
-    //note descArg is type of info needed like weekday, month, year, hour, minute, second or timeZoneName
-    //typeArg describes what type of info is needed long, short, numeric
-    convertUTC(num, descArg, typeArg) {
-        const milliseconds = num * 1000;
-        const dateObj = new Date(milliseconds);
 
-        switch(descArg) {
-            case 'weekday':
-                return dateObj.toLocaleString("en-US", {weekday: typeArg});
-            case 'hour':
-                return dateObj.toLocaleString("en-US", {hour: typeArg});
-            case 'time':
-                return dateObj.toLocaleTimeString("en-US", {timeStyle: typeArg});
-            default:
-                return dateObj.toLocaleString("en-US", {weekday: typeArg})
-        }
-    }
-
+    //takes in the wind direction as an angle and spits out the wind direction.
     degToCompass(num) {
         const val = Math.floor((num / 22.5) + 0.5);
         const arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
@@ -41,9 +25,9 @@ class showDay extends React.Component {
         if (this.props.dayWeather.dt) {
             const {city, state, zip, dayWeather} = this.props;
             const icon = "http://openweathermap.org/img/w/" + dayWeather.weather[0].icon + ".png";
-            const day = this.convertUTC(`${dayWeather.dt}`, 'weekday', 'long');
-            const sunrise = this.convertUTC(`${dayWeather.sunrise}`, 'time', 'short');
-            const sunset = this.convertUTC(`${dayWeather.sunset}`, 'time', 'short');
+            const day = convertUTC(`${dayWeather.dt}`, 'weekday', 'long');
+            const sunrise = convertUTC(`${dayWeather.sunrise}`, 'time', 'short');
+            const sunset = convertUTC(`${dayWeather.sunset}`, 'time', 'short');
             const windDirection = this.degToCompass(dayWeather.wind_deg);
             const windInformation = `${windDirection} ${Math.round(dayWeather.wind_speed)}mph`;
             console.log(windInformation);
