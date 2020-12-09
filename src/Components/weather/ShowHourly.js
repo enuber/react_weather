@@ -8,7 +8,7 @@ class showHourly extends React.Component {
         const hourList = this.props.hourlyWeather.slice(0, 26);
         return hourList.map(currentTime => {
             const hour = convertUTC(`${currentTime.dt}`, 'hour', 'numeric');
-            const icon = "http://openweathermap.org/img/w/"+ currentTime.weather[0].icon +".png";
+            const icon = "https://openweathermap.org/img/w/"+ currentTime.weather[0].icon +".png";
             const temperature = Math.round(currentTime.temp);
             return (
                 <div className="hourContainer" key={currentTime.dt}>

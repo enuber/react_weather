@@ -9,7 +9,7 @@ class showDay extends React.Component {
     //makes sure that if there is no data, it pushes to home so that there are no errors thrown.
     componentDidMount() {
         if(!this.props.dayWeather.dt) {
-            history.push('/');
+            history.push('/apps/weather_react/');
         }
     }
 
@@ -24,7 +24,7 @@ class showDay extends React.Component {
         console.log(this.props);
         if (this.props.dayWeather.dt) {
             const {city, state, zip, dayWeather} = this.props;
-            const icon = "http://openweathermap.org/img/w/" + dayWeather.weather[0].icon + ".png";
+            const icon = "https://openweathermap.org/img/w/" + dayWeather.weather[0].icon + ".png";
             const day = convertUTC(`${dayWeather.dt}`, 'weekday', 'long');
             const sunrise = convertUTC(`${dayWeather.sunrise}`, 'time', 'short');
             const sunset = convertUTC(`${dayWeather.sunset}`, 'time', 'short');
@@ -69,7 +69,7 @@ class showDay extends React.Component {
                 <div className="dayContainer">
                     {this.renderChosenDay()}
                 </div>
-                <Link to={`/`} className="button">Back To Current Weather</Link>
+                <Link to={`/apps/weather_react/`} className="button">Back To Current Weather</Link>
             </div>
         )
     }

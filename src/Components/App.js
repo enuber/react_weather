@@ -64,7 +64,7 @@ class App extends React.Component {
     };
 
     onSearchSubmit = async (zipcode, error) => {
-        history.push('/');
+        history.push('/apps/weather_react/');
         await this.setState({error: error});
         await this.getLocation(zipcode);
         await this.getWeather(zipcode);
@@ -72,7 +72,7 @@ class App extends React.Component {
 
     onDayClick = (dayClicked, day) => {
         this.setState({dayClickedWeather: dayClicked});
-        history.push(`/${day}`);
+        history.push(`/apps/weather_react/${day}`);
     };
 
     render() {
@@ -82,7 +82,7 @@ class App extends React.Component {
                     <Header/>
                     <ZipcodeInput onSubmit={this.onSearchSubmit}/>
                     <Switch>
-                        <Route path="/" exact render={() =>
+                        <Route path="/apps/weather_react/" exact render={() =>
                             <ShowWeather
                                 allWeather={this.state.currentWeather}
                                 city={this.state.city}
@@ -92,7 +92,7 @@ class App extends React.Component {
                                 clickedADay={this.onDayClick}
                             />}
                         />
-                        <Route path="/:day" render={() =>
+                        <Route path="/apps/weather_react/:day" render={() =>
                             <ShowDay
                                 dayWeather={this.state.dayClickedWeather}
                                 city={this.state.city}

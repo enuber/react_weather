@@ -17,7 +17,7 @@ class showDaily extends React.Component {
         const {dailyWeather} = this.props;
         return dailyWeather.map( currentDay => {
             const day = convertUTC(`${currentDay.dt}`, 'weekday', 'short');
-            const icon = "http://openweathermap.org/img/w/"+ currentDay.weather[0].icon +".png";
+            const icon = "https://openweathermap.org/img/w/"+ currentDay.weather[0].icon +".png";
             const maxTemp = Math.round(currentDay.temp.max);
             const minTemp = Math.round(currentDay.temp.min);
             const isActive = this.checkActive(currentDay);

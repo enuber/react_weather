@@ -9,7 +9,7 @@ class showWeather extends React.Component {
     renderCurrent() {
         const {city, state, zip} = this.props;
         const {current} = this.props.allWeather;
-        const icon = "http://openweathermap.org/img/w/"+ current.weather[0].icon +".png";
+        const icon = "https://openweathermap.org/img/w/"+ current.weather[0].icon +".png";
         const day = convertUTC(`${current.dt}`, 'weekday', 'long');
         const sunrise = convertUTC(`${current.sunrise}`, 'time', 'short');
         const sunset = convertUTC(`${current.sunset}`, 'time', 'short');
