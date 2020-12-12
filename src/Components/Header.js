@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 const Header = () => {
     return (
         <div className="ui secondary pointing menu">
-            <Link to="/" className="item">
+            <Link to="/apps/weather_react/" className="item">
                 Get Weather - Using React Component State and Props
             </Link>
             <div className="right menu">
-                <Link to="/" className="item">Home</Link>
+                <Link to="/apps/weather_react/" className="item">Home</Link>
             </div>
         </div>
     )
